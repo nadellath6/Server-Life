@@ -1,0 +1,10 @@
+{
+  "description": "Create and customize engaging games with an intuitive interface, perfect for game enthusiasts and developers looking to bring their ideas to life.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

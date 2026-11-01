@@ -1,0 +1,19 @@
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; min-height: 100vh; background: #071012; }
+button { font: inherit; }
+button:focus-visible { outline: 2px solid #52e0bc; outline-offset: 3px; }
+
+.app-shell {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 70% 10%, rgba(25, 119, 106, .13), transparent 30%),
+    linear-gradient(160deg, #0a1517 0%, #050b0d 58%, #081214 100%);
+}
+
+.noise {
+  position: fixed; inset: 0; pointer-events: none; z-index: 20; opacity: .028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.9'/%3E%3C/svg%3E");
+}

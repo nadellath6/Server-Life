@@ -1,0 +1,18 @@
+﻿@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+:root {
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "DM Mono", monospace;
+  --color-background: #071012;
+  --color-foreground: #eef5f7;
+  --color-accent: #64e4c3;
+  --color-normal: #86d66f;
+  --color-warning: #f0bd62;
+  --color-critical: #ff7a68;
+  --color-overload: #ff4f67;
+  font-family: var(--font-display);
+  color: var(--color-foreground);
+  background: var(--color-background);
+  font-synthesis: none;
+}
+
