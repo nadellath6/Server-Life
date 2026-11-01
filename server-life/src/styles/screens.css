@@ -14,7 +14,11 @@
 .briefing-tip { background: #0d1a1c; border-left: 2px solid #dfb860; padding: 15px; color: #77898c; text-align: left; font-size: 11px; line-height: 1.6; margin-bottom: 26px; }
 .briefing-tip b { color: #d9e3e5; display: block; text-transform: uppercase; font: 9px "DM Mono"; margin-bottom: 3px; }
 
-.game-screen { height: 100vh; min-height: 650px; display: flex; flex-direction: column; overflow: hidden; background: #071012; }
+.game-screen { height: 100dvh; min-height: 0; display: flex; flex-direction: column; overflow: hidden; background: #071012; position: relative; }
+.arena-canvas { display: block; flex: 1 1 auto; width: 100%; height: 100%; min-height: 0; cursor: pointer; }
+.touch-controls { display: flex; justify-content: center; gap: 12px; height: 58px; padding: 10px; position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); z-index: 4; }
+.touch-controls button { border: 1px solid #365154; background: #102124; color: #d7e5e5; padding: 8px 26px; cursor: pointer; font: 10px var(--font-mono); }
+.log-line { color: #718387; font: 10px/1.7 var(--font-mono); }
 .game-header { height: 68px; flex: 0 0 68px; border-bottom: 1px solid #213337; display: flex; align-items: center; padding: 0 24px; background: #091416; z-index: 10; }
 .game-header .brand { min-width: 230px; }
 .mission-title { margin: auto; text-align: center; }
@@ -25,6 +29,18 @@
 .game-timer b { font: 16px "DM Mono"; color: #dce7e8; }
 .exit-button { margin-left: 22px; color: #758689; border: 1px solid #2b3b3e; background: transparent; font-size: 9px; padding: 8px 12px; cursor: pointer; }
 .pause-button { margin-left: 18px; color: #a9b9bb; border: 1px solid #36504f; background: #10201f; font-size: 9px; padding: 8px 11px; cursor: pointer; display: flex; align-items: center; gap: 7px; }
+.pause-overlay { position: absolute; inset: 68px 0 0; z-index: 20; display: grid; place-items: center; background: rgba(3, 10, 12, .78); backdrop-filter: blur(9px); }
+.pause-overlay[hidden] { display: none; }
+.pause-card { width: min(440px, calc(100% - 40px)); padding: 35px; text-align: center; border: 1px solid #31534d; background: #0b181a; box-shadow: 0 25px 80px #010404; }
+.pause-card h2 { font-size: 30px; margin: 12px 0; }
+.pause-card p { color: #8b9b9f; font-size: 12px; line-height: 1.7; }
+.login-card { display: grid; gap: 12px; text-align: left; }
+.login-card label { color: #849599; font: 9px "DM Mono"; text-transform: uppercase; }
+.login-card select { color: #dce7e8; background: #0d1a1c; border: 1px solid #31504d; padding: 12px; font: 12px "DM Mono"; }
+.token-boxes { display: flex; gap: 10px; }
+.token-boxes input { width: 52px; height: 58px; color: #dce7e8; text-align: center; background: #0d1a1c; border: 1px solid #31504d; font: 25px "DM Mono"; }
+.login-helper, .login-error { font-size: 11px; color: #718387; }
+.login-error { color: #ff6572; }
 .pause-symbol { width: 8px; height: 10px; display: inline-block; border-left: 3px solid currentColor; border-right: 3px solid currentColor; }
 .play-symbol { width: 0; height: 0; display: inline-block; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid currentColor; }
 .game-layout { display: grid; grid-template-columns: 255px minmax(420px, 1fr) 275px; flex: 1; min-height: 0; }
@@ -41,6 +57,15 @@
 .resource__label strong.critical { color: #ff5263; }
 .resource__track { height: 5px; background: #19282b; margin-top: 8px; overflow: hidden; }
 .resource__track span { display: block; height: 100%; box-shadow: 0 0 8px currentColor; transition: width .15s; }
+.resource__label em { margin-left: 5px; color: #5ee0be; font: 8px "DM Mono"; font-style: normal; }
+.resource--waspada .resource__label em { color: #dfb860; }
+.resource--kritis .resource__label em, .resource--overload .resource__label em { color: #ff6572; }
+.resource__warning { display: block; margin-top: 5px; color: #ff6572; font: 7px/1.4 "DM Mono"; }
+.sla-meter { margin-top: 22px; color: #8d9b9f; font-size: 10px; }
+.sla-meter > div:first-child { display: flex; justify-content: space-between; }
+.sla-meter strong { color: #5ee0be; font: 10px "DM Mono"; }
+.sla-meter small { display: block; margin-top: 5px; color: #526568; font: 7px "DM Mono"; }
+.quota-badges { display: flex; gap: 5px; margin-top: 5px; font-size: 9px !important; }
 .capacity-note { display: block; color: #43565a; font: 7px "DM Mono"; text-align: right; }
 .telemetry-grid { border-top: 1px solid #1d2d30; margin-top: 25px; padding-top: 18px; display: grid; grid-template-columns: 1fr 1fr; }
 .telemetry-grid span + span { border-left: 1px solid #1d2d30; padding-left: 18px; }
@@ -49,7 +74,7 @@
 .temperature { margin-top: 20px; padding: 13px; background: #101c1e; display: flex; justify-content: space-between; align-items: center; }
 .temperature b { font: 11px "DM Mono"; color: #e8c16d; }
 
-.runner { position: relative; overflow: hidden; background: linear-gradient(#081416 0%, #0b2223 42%, #081012 100%); }
+.runner { position: relative; display: flex; min-width: 0; min-height: 0; overflow: hidden; background: linear-gradient(#081416 0%, #0b2223 42%, #081012 100%); }
 .runner::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(rgba(65, 153, 140, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(65, 153, 140, .05) 1px, transparent 1px); background-size: 36px 36px; mask-image: linear-gradient(to bottom, black, transparent 65%); }
 .horizon { position: absolute; left: 0; right: 0; top: 12%; height: 80px; border-top: 1px solid rgba(77, 209, 180, .18); box-shadow: 0 -10px 40px rgba(40, 214, 174, .08); text-align: center; }
 .horizon span { background: #091719; color: #39635f; padding: 4px 10px; font: 7px "DM Mono"; letter-spacing: .12em; }
@@ -187,4 +212,83 @@
   .upgrade-grid { grid-template-columns: 1fr; }
   .hero h1 { font-size: 39px; }
   .section-heading h2 { font-size: 25px; }
+}
+
+html:has(.arena-screen), body:has(.arena-screen) {
+  overflow: hidden;
+}
+
+.arena-screen .game-layout {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.arena-screen .runner {
+  min-height: 0;
+}
+
+@media (max-height: 700px) {
+  .arena-screen .game-header {
+    height: 56px;
+    flex-basis: 56px;
+    padding: 0 16px;
+  }
+
+  .arena-screen .panel {
+    padding: 14px 16px;
+    overflow: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .arena-screen .game-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    overflow: hidden;
+  }
+
+  .arena-screen .telemetry,
+  .arena-screen .console {
+    position: relative;
+    inset: auto;
+    height: auto;
+    border: 0;
+  }
+
+  .arena-screen .telemetry {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 7px;
+    padding: 10px 12px;
+  }
+
+  .arena-screen .telemetry .panel-title,
+  .arena-screen .telemetry .telemetry-grid {
+    display: none;
+  }
+
+  .arena-screen .telemetry .resource {
+    margin: 0;
+  }
+
+  .arena-screen .runner {
+    position: relative;
+    inset: auto;
+    padding-top: 0;
+  }
+
+  .arena-screen .console {
+    display: block;
+    padding: 8px 12px;
+  }
+
+  .arena-screen .console .panel-title,
+  .arena-screen .console .log-line {
+    display: none;
+  }
+
+  .arena-screen .touch-controls button {
+    display: block;
+  }
 }
