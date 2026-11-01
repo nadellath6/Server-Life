@@ -11,6 +11,7 @@ import { getActiveProfile } from "../engine/auth";
 import { loadProfileLog } from "../storage/profile";
 import { ERAS } from "../data/eras";
 import { incidentWarning, nextIncidentName } from "../engine/incidents";
+import { laneFromTap } from "../engine/tutorial";
 
 function barsMarkup(state: GameState): string {
   return (Object.keys(RESOURCE_META) as ResourceKey[])
@@ -125,7 +126,7 @@ export function Arena(root: HTMLElement, onExit: () => void, onEnd: (state: Game
   };
   const onCanvasClick = (event: MouseEvent) => {
     const bounds = canvas.getBoundingClientRect();
-    const target = Math.round(((event.clientX - bounds.left) / bounds.width) * (GAME.laneX.length - 1));
+    const target = laneFromTap(event.clientX, bounds.left, bounds.width);
     const delta = target - stateRef.current.dispatcher.lane;
     if (delta) move(delta < 0 ? -1 : 1);
   };

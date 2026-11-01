@@ -7,6 +7,7 @@ import { getActiveProfile } from "../engine/auth";
 import { beginSession, finishSession, finalizeInterruptedSessions } from "../storage/profile";
 import { loadProfileLog } from "../storage/profile";
 import { renderReport, resultMarkup, attachResultListeners } from "./report";
+import { Tutorial } from "./tutorial";
 
 export type Route = "login" | "tutorial" | "home" | "briefing" | "briefing2" | "briefing3" | "arena" | "arena2" | "arena3" | "report" | "result";
 
@@ -24,10 +25,21 @@ function render(route: Route, root: HTMLElement): void {
     return;
   }
   if (route === "login") {
-    Login(root, () => navigate("home"));
+    Login(root, () => {
+      const profile = getActiveProfile();
+      navigate(profile && !loadProfileLog(profile).tutorial?.done ? "tutorial" : "home");
+    });
+    return;
+  }
+  if (route === "tutorial") {
+    const profile = getActiveProfile();
+    if (!profile) return navigate("login");
+    Tutorial(root, profile, () => navigate("home"));
     return;
   }
   if (route === "home") {
+    const profile = getActiveProfile();
+    if (profile && !loadProfileLog(profile).tutorial?.done) return navigate("tutorial");
     root.innerHTML = `<main class="app-shell"><div class="noise"></div>${Home()}</main>`;
     attachHomeListeners(root, navigate);
     return;
@@ -98,7 +110,7 @@ function render(route: Route, root: HTMLElement): void {
     attachResultListeners(root, record, profile, navigate);
     return;
   }
-  root.innerHTML = `<main class="app-shell"><div class="noise"></div><section class="briefing-screen"><div class="briefing-card"><span class="briefing-step">SERVER LIFE</span><h1>${route.toUpperCase()}</h1><p>Coming soon.</p><button class="primary-button" data-route="home">Kembali ke beranda</button></div></section></main>`;
+  root.innerHTML = `<main class="app-shell"><div class="noise"></div><section class="briefing-screen"><div class="briefing-card"><span class="briefing-step">SERVER LIFE</span><h1>${String(route).toUpperCase()}</h1><p>Coming soon.</p><button class="primary-button" data-route="home">Kembali ke beranda</button></div></section></main>`;
   root.querySelector<HTMLElement>("[data-route]")?.addEventListener("click", () => navigate("home"));
 }
 
@@ -126,7 +138,7 @@ export function startRouter(root: HTMLElement): void {
     if (window.location.hash === "#arena" || window.location.hash === "#arena2" || window.location.hash === "#arena3") {
       window.location.hash = "home";
     } else if (!window.location.hash) {
-      window.location.hash = "home";
+      window.location.hash = profile && !loadProfileLog(profile).tutorial?.done ? "tutorial" : "home";
     } else {
       render(currentRoute(), root);
     }

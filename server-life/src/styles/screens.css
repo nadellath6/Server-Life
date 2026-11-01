@@ -13,6 +13,26 @@
 .request-legend b { font-weight: 500; }
 .briefing-tip { background: #0d1a1c; border-left: 2px solid #dfb860; padding: 15px; color: #77898c; text-align: left; font-size: 11px; line-height: 1.6; margin-bottom: 26px; }
 .briefing-tip b { color: #d9e3e5; display: block; text-transform: uppercase; font: 9px "DM Mono"; margin-bottom: 3px; }
+.tutorial-screen { min-height: 100vh; display: grid; place-items: center; padding: 40px 20px; }
+.tutorial-card { width: min(760px, 100%); border: 1px solid #28403f; background: rgba(8, 19, 21, .96); padding: 38px; box-shadow: 0 30px 100px #010404; }
+.tutorial-progress { color: #dfb860; font: 10px "DM Mono"; margin: 12px 0 18px; }
+.tutorial-card h2 { color: #dce7e8; font-size: 15px; margin: 25px 0 10px; }
+.tutorial-card p { color: #849599; line-height: 1.7; }
+.tutorial-callout, .tutorial-report, .tutorial-demo, .tutorial-wallet { border-left: 2px solid #5ee0be; background: #0d1a1c; padding: 15px; color: #a4b5b7; margin: 20px 0; }
+.tutorial-resources, .incident-preview, .tutorial-node-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 20px 0; }
+.tutorial-resource, .tutorial-node-list button { min-height: 54px; text-align: left; padding: 12px; color: #a8b8ba; background: #101f21; border: 1px solid #294144; cursor: pointer; }
+.tutorial-resource.selected { border-color: #5ee0be; }
+.tutorial-resource span { display: block; color: #77898c; font-size: 11px; margin-top: 5px; }
+.tutorial-quiz { display: grid; gap: 8px; }
+.tutorial-quiz label { display: grid; grid-template-columns: 1fr 1fr; align-items: center; color: #a8b8ba; font-size: 12px; }
+.tutorial-quiz select { color: #dce7e8; background: #0d1a1c; border: 1px solid #31504d; padding: 10px; }
+.tutorial-result { border: 1px solid #31534d; padding: 14px; color: #a8b8ba; }
+.tutorial-result b, .tutorial-wallet b { color: #5ee0be; font: 18px "DM Mono"; }
+.tutorial-arena { border: 1px solid #294144; background: linear-gradient(#081416, #0b2223); padding: 24px; text-align: center; margin: 20px 0; }
+.tutorial-lanes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+.tutorial-lanes span { padding: 35px 0; border: 1px dashed #39615c; color: #5ee0be; font: 18px "DM Mono"; }
+.tutorial-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; }
+.tutorial-link { display: block; margin-top: 14px; color: #79bfb0; background: none; border: 0; cursor: pointer; font-size: 12px; }
 
 .game-screen { height: 100dvh; min-height: 0; display: flex; flex-direction: column; overflow: hidden; background: #071012; position: relative; }
 .arena-canvas { display: block; flex: 1 1 auto; width: 100%; height: 100%; min-height: 0; cursor: pointer; }
@@ -202,6 +222,43 @@
   .report-stats span { padding: 11px 8px; }
   .report-actions { flex-direction: column-reverse; }
   .report-actions button { min-height: 48px; }
+}
+
+@media (max-width: 767px) {
+  body { min-width: 0; overflow-x: hidden; }
+  .app-shell { min-height: 100dvh; }
+  .game-screen { min-height: 100dvh; padding-bottom: env(safe-area-inset-bottom); }
+  .game-header { height: auto; min-height: 58px; flex-wrap: wrap; gap: 8px; padding: 8px 12px; }
+  .game-header .brand { min-width: 0; flex: 1 1 100%; }
+  .mission-title { order: 3; margin: 0; }
+  .game-timer { margin-left: auto; min-width: 50px; }
+  .pause-button, .exit-button { min-height: 44px; margin-left: 0; }
+  .game-layout { grid-template-rows: auto minmax(0, 65dvh) auto; }
+  .arena-screen .telemetry { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 8px 10px; }
+  .arena-screen .telemetry .resource { min-width: 0; }
+  .arena-screen .telemetry .resource__warning { display: none; }
+  .arena-screen .telemetry .incident-banner,
+  .arena-screen .telemetry .heavy-status,
+  .arena-screen .telemetry .rule-badges,
+  .arena-screen .telemetry .node-readiness { grid-column: 1 / -1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .arena-screen .telemetry .sla-meter,
+  .arena-screen .telemetry .telemetry-grid { display: flex; grid-column: 1 / -1; margin: 0; padding: 0; border: 0; gap: 8px; font-size: 11px; }
+  .arena-screen .telemetry .sla-meter .resource__track,
+  .arena-screen .telemetry .temperature .resource__track { display: none; }
+  .arena-screen .console { padding: 4px 10px; min-height: 30px; }
+  .arena-screen .console [data-log] { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .arena-screen .touch-controls { position: absolute; bottom: 8px; width: 100%; height: auto; padding: 0 12px; gap: 12px; }
+  .arena-screen .touch-controls button { display: block; flex: 1; min-height: 48px; font-size: 14px; touch-action: none; }
+  .arena-canvas { touch-action: none; }
+  .tutorial-screen, .briefing-screen, .report-screen { min-height: 100dvh; padding: 20px 12px; }
+  .briefing-card, .report-card, .tutorial-card { width: 100%; padding: 24px 18px; }
+  .briefing-card h1, .report-card h1, .tutorial-card h1 { font-size: 26px; }
+  .tutorial-card, .tutorial-card p, .tutorial-card button, .tutorial-card select { font-size: 14px; }
+  .tutorial-actions { display: flex; justify-content: space-between; gap: 10px; margin-top: 20px; }
+  .tutorial-resource, .tutorial-node-list button, .tutorial-quiz select { min-height: 44px; }
+  .home-screen .topbar { flex-wrap: wrap; height: auto; padding: 12px; }
+  .home-screen .skill-branches { grid-template-columns: 1fr; }
+  .home-screen .era-grid { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 430px) {

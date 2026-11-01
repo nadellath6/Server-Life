@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { beginSession, finalizeInterruptedSessions, formIndexForAttempt, loadProfileLog, profileLogKey } from "./profile";
+import { beginSession, completeTutorial, finalizeInterruptedSessions, formIndexForAttempt, loadProfileLog, profileLogKey } from "./profile";
 
 function memoryStorage() {
   const values = new Map<string, string>();
@@ -31,5 +31,13 @@ describe("Stage E1 profile sessions", () => {
     expect(next.attempt).toBe(2);
     expect(loadProfileLog(first, storage).attempt_counter).toBe(2);
     expect(storage.getItem(profileLogKey(second.kode))).toBeNull();
+  });
+
+  it("stores the first tutorial result and does not overwrite it on replay", () => {
+    const storage = memoryStorage();
+    const profile = { kode: "T", nomorUrut: 1 };
+    completeTutorial(profile, { score: 3, answers: { CPU: "WEB" }, durationSeconds: 1 }, storage);
+    completeTutorial(profile, { score: 1, answers: {}, durationSeconds: 2 }, storage);
+    expect(loadProfileLog(profile, storage).tutorial?.quizScore).toBe(3);
   });
 });

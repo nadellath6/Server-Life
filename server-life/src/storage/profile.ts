@@ -3,6 +3,7 @@ import type { SessionSummary } from "../engine/telemetry";
 import { provisionalC4Score } from "../data/c4";
 
 export type SessionStatus = "LULUS" | "GAGAL" | "GAME_OVER" | "ABORTED" | "IN_PROGRESS";
+export type TutorialRecord = { done: boolean; completedAt?: string; quizScore?: number; quizAnswers?: Record<string, string>; durationSeconds?: number };
 export type SessionRecord = {
   sessionId: string;
   era: 1 | 2 | 3;
@@ -35,6 +36,7 @@ export type ProfileLog = {
   attempt_counter: number;
   sessions: SessionRecord[];
   upgradeOrder: { nodeId: string; time: string; creditsAfter: number }[];
+  tutorial?: TutorialRecord;
 };
 
 type StorageLike = {
@@ -58,7 +60,7 @@ export function profileLogKey(kode: string): string {
 }
 
 export function emptyProfileLog(): ProfileLog {
-  return { version: 1, attempt_counter: 0, sessions: [], upgradeOrder: [] };
+  return { version: 1, attempt_counter: 0, sessions: [], upgradeOrder: [], tutorial: { done: false } };
 }
 
 export function loadProfileLog(profile: ActiveProfile, source = storage()): ProfileLog {
@@ -68,10 +70,22 @@ export function loadProfileLog(profile: ActiveProfile, source = storage()): Prof
     if (!raw) return emptyProfileLog();
     const parsed = JSON.parse(raw) as ProfileLog;
     if (parsed.version !== 1 || !Number.isInteger(parsed.attempt_counter) || !Array.isArray(parsed.sessions)) return emptyProfileLog();
-    return { version: 1, attempt_counter: Math.max(0, parsed.attempt_counter), sessions: parsed.sessions, upgradeOrder: Array.isArray(parsed.upgradeOrder) ? parsed.upgradeOrder : [] };
+    return { version: 1, attempt_counter: Math.max(0, parsed.attempt_counter), sessions: parsed.sessions, upgradeOrder: Array.isArray(parsed.upgradeOrder) ? parsed.upgradeOrder : [], tutorial: parsed.tutorial?.done ? parsed.tutorial : { done: false } };
   } catch {
     return emptyProfileLog();
   }
+}
+
+export function hasCompletedTutorial(profile: ActiveProfile, source = storage()): boolean {
+  return loadProfileLog(profile, source).tutorial?.done === true;
+}
+
+export function completeTutorial(profile: ActiveProfile, quiz: { score: number; answers: Record<string, string>; durationSeconds: number }, target = storage()): ProfileLog {
+  const log = loadProfileLog(profile, target);
+  if (log.tutorial?.done) return log;
+  const next = { ...log, tutorial: { done: true, completedAt: new Date().toISOString(), quizScore: quiz.score, quizAnswers: quiz.answers, durationSeconds: quiz.durationSeconds } };
+  saveProfileLog(profile, next, target);
+  return next;
 }
 
 export function saveProfileLog(profile: ActiveProfile, log: ProfileLog, target = storage()): void {
